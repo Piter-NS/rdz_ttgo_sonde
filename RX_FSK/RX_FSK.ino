@@ -219,9 +219,24 @@ void setupChannelList() {
   file.close();
 }
 
+const char *HTMLHEAD="<html><head> <meta charset=\"UTF-8\"> <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">";
+void HTMLBODY(char *ptr, const char *which) {
+  strcat(ptr, "<body><form class=\"wrapper\" action=\"");
+  strcat(ptr, which);
+  strcat(ptr, "\" method=\"post\"><div class=\"content\">");
+}
+void HTMLBODYEND(char *ptr) {
+  strcat(ptr, "</div></form></body></html>");
+}
+void HTMLSAVEBUTTON(char *ptr) {
+  strcat(ptr, "</div><div class=\"footer\"><input type=\"submit\" class=\"save\" value=\"Save changes\"/>");
+}
+
 const char *createQRGForm() {
   char *ptr = message;
-  strcpy(ptr, "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">");
+  strcpy(ptr, HTMLHEAD);
+  strcat(ptr, "<script src=\"rdz.js\"/>  <script> window.onload = prep; </script></head>");
+/*
   strcat(ptr, "<script type=\"text/javascript\">"
      "let stypes=new Map();"
      "stypes.set('4', 'RS41');"
@@ -246,13 +261,15 @@ const char *createQRGForm() {
      "  } txt.replaceWith(sel); } } "
      "  window.onload = prep; "
      "</script>");
-     
-  strcat(ptr, "</head><body><form action=\"qrg.html\" method=\"post\"><table><tr><th>ID</th><th>Active</th><th>Freq</th><th>Launchsite</th><th>Mode</th></tr>");
+*/
+  HTMLBODY(ptr, "qrg.html");     
+  //strcat(ptr, "<body><form class=\"wrapper\" action=\"qrg.html\" method=\"post\"><div class=\"content\"><table><tr><th>ID</th><th>Active</th><th>Freq</th><th>Launchsite</th><th>Mode</th></tr>");
+  strcat(ptr, "<table><tr><th>ID</th><th>Active</th><th>Freq</th><th>Launchsite</th><th>Mode</th></tr>");
   for (int i = 0; i < sonde.config.maxsonde; i++) {
     //String s = sondeTypeSelect(i >= sonde.nSonde ? 2 : sonde.sondeList[i].type);
     String site = sonde.sondeList[i].launchsite;
     sprintf(ptr + strlen(ptr), "<tr><td>%d</td><td><input name=\"A%d\" type=\"checkbox\" %s/></td>"
-            "<td><input name=\"F%d\" type=\"text\" value=\"%3.3f\"></td>"
+            "<td><input name=\"F%d\" type=\"text\" width=12 value=\"%3.3f\"></td>"
             "<td><input name=\"S%d\" type=\"text\" value=\"%s\"></td>"
             //"<td><select name=\"T%d\">%s</select></td>",
             "<td><input class='stype' name='T%d' value='%c'>",
@@ -263,7 +280,10 @@ const char *createQRGForm() {
             i + 1, i >= sonde.nSonde ? 2 : sondeTypeChar[sonde.sondeList[i].type] );
             //i + 1, s.c_str());
   }
-  strcat(ptr, "</table><input type=\"submit\" value=\"Update\"/></form></body></html>");
+  strcat(ptr, "</table>");
+  //</div><div class=\"footer\"><input type=\"submit\" class=\"update\" value=\"Update\"/>");
+  HTMLSAVEBUTTON(ptr);
+  HTMLBODYEND(ptr);
   Serial.printf("QRG form: size=%d bytes\n", strlen(message));
   return message;
 }
@@ -358,7 +378,9 @@ void setupWifiList() {
 const char *createWIFIForm() {
   char *ptr = message;
   char tmp[4];
-  strcpy(ptr, "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"></head><body><form action=\"wifi.html\" method=\"post\"><table><tr><th>Nr</th><th>SSID</th><th>Password</th></tr>");
+  strcpy(ptr, HTMLHEAD); strcat(ptr, "</head>");
+  HTMLBODY(ptr, "wifi.html");
+  strcat(ptr, "<table><tr><th>Nr</th><th>SSID</th><th>Password</th></tr>");
   for (int i = 0; i < MAX_WIFI; i++) {
     sprintf(tmp, "%d", i);
     sprintf(ptr + strlen(ptr), "<tr><td>%s</td><td><input name=\"S%d\" type=\"text\" value=\"%s\"/></td>"
@@ -367,7 +389,10 @@ const char *createWIFIForm() {
             i + 1, i < nNetworks ? networks[i].id.c_str() : "",
             i + 1, i < nNetworks ? networks[i].pw.c_str() : "");
   }
-  strcat(ptr, "</table><input type=\"submit\" value=\"Update\"></input></form></body></html>");
+  strcat(ptr, "</table>");
+  //</div><div class=\"footer\"><input type=\"submit\" class=\"update\" value=\"Update\"/>");
+  HTMLSAVEBUTTON(ptr);
+  HTMLBODYEND(ptr);
   Serial.printf("WIFI form: size=%d bytes\n", strlen(message));
   return message;
 }
@@ -452,7 +477,8 @@ void addSondeStatus(char *ptr, int i)
 
 const char *createStatusForm() {
   char *ptr = message;
-  strcpy(ptr, "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"><meta http-equiv=\"refresh\" content=\"5\"></head><body>");
+  strcpy(ptr, HTMLHEAD);
+  strcat(ptr, "<meta http-equiv=\"refresh\" content=\"5\"></head><body>");
 
   for (int i = 0; i < sonde.nSonde; i++) {
     int snum = (i + sonde.currentSonde) % sonde.nSonde;
@@ -623,7 +649,9 @@ void addConfigInt8List(char *ptr, int idx, const char *label, int8_t *list) {
 
 const char *createConfigForm() {
   char *ptr = message;
-  strcpy(ptr, "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"></head><body><form action=\"config.html\" method=\"post\"><table><tr><th>Option</th><th>Value</th></tr>");
+  strcpy(ptr, HTMLHEAD); strcat(ptr, "</head>");
+  HTMLBODY(ptr, "config.html");
+  strcat(ptr, "<table><tr><th>Option</th><th>Value</th></tr>");
   for (int i = 0; i < N_CONFIG; i++) {
     switch (config_list[i].type) {
       case -5: // Heading
@@ -652,7 +680,10 @@ const char *createConfigForm() {
         break;
     }
   }
-  strcat(ptr, "</table><input type=\"submit\" value=\"Update\"></input></form></body></html>");
+  strcat(ptr, "</table>");
+  //</div><div class=\"footer\"><input type=\"submit\" class=\"update\" value=\"Update\"/>");
+  HTMLSAVEBUTTON(ptr);
+  HTMLBODYEND(ptr);
   Serial.printf("Config form: size=%d bytes\n", strlen(message));
   return message;
 }
@@ -711,21 +742,23 @@ const char *handleConfigPost(AsyncWebServerRequest *request) {
 
 const char *ctrlid[] = {"rx", "scan", "spec", "wifi", "rx2", "scan2", "spec2", "wifi2"};
 
-const char *ctrllabel[] = {"Receiver (short keypress)", "Scanner (double keypress)", "Spectrum (medium keypress)", "WiFi (long keypress)",
-                           "Button 2 (short keypress)", "Button 2 (double keypress)", "Button 2 (medium keypress)", "Button 2 (long keypress)"
+const char *ctrllabel[] = {"Receiver/next freq. (short keypress)", "Scanner (double keypress)", "Spectrum (medium keypress)", "WiFi (long keypress)",
+                           "Button 2/next screen (short keypress)", "Button 2 (double keypress)", "Button 2 (medium keypress)", "Button 2 (long keypress)"
                           };
 
 const char *createControlForm() {
   char *ptr = message;
-  strcpy(ptr, "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"></head><body><form action=\"control.html\" method=\"post\">");
+  strcpy(ptr, HTMLHEAD); strcat(ptr, "</head>");
+  HTMLBODY(ptr, "control.html");
   for (int i = 0; i < 8; i++) {
-    strcat(ptr, "<input type=\"submit\" name=\"");
+    strcat(ptr, "<input class=\"ctlbtn\" type=\"submit\" name=\"");
     strcat(ptr, ctrlid[i]);
     strcat(ptr, "\" value=\"");
     strcat(ptr, ctrllabel[i]);
-    strcat(ptr, "\"></input><br>");
+    strcat(ptr, "\"></input>");
+    if(i==3) { strcat(ptr, "<p></p>"); }
   }
-  strcat(ptr, "</form></body></html>");
+  HTMLBODYEND(ptr);
   Serial.printf("Control form: size=%d bytes\n", strlen(message));
   return message;
 }
