@@ -269,9 +269,9 @@ const char *createQRGForm() {
     //String s = sondeTypeSelect(i >= sonde.nSonde ? 2 : sonde.sondeList[i].type);
     String site = sonde.sondeList[i].launchsite;
     sprintf(ptr + strlen(ptr), "<tr><td>%d</td><td><input name=\"A%d\" type=\"checkbox\" %s/></td>"
-            "<td><input name=\"F%d\" type=\"text\" width=12 value=\"%3.3f\"></td>"
-            "<td><input name=\"S%d\" type=\"text\" value=\"%s\"></td>"
-            //"<td><select name=\"T%d\">%s</select></td>",
+            "<td><input name=\"F%d\" type=\"text\" value=\"%3.3f\" style='width: 60px;></td>"
+            "<td><input name=\"S%d\" type=\"text\" value=\"%s\" style='width: 120px;></td>"
+	    //"<td><select name=\"T%d\">%s</select></td>",
             "<td><input class='stype' name='T%d' value='%c'>",
             i + 1,
             i + 1, (i < sonde.nSonde && sonde.sondeList[i].active) ? "checked" : "",
