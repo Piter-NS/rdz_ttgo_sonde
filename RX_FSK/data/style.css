@@ -121,10 +121,13 @@ p{
   text-align: center;
   text-decoration: none;
   display: block;
-  margin: 2;
-  font-size: 10vh;
+  margin: 5;
+  font-size: 14px;
 }
 .update {
   margin: 0;
   display: block;
+}
+.footer {
+    margin-top: 8px;
 }
