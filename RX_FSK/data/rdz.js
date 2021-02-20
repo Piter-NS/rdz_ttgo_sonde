@@ -20,6 +20,7 @@ function prep() {
       opt.innerHTML=stype[1];
       if(stype[0]==val) { opt.setAttribute('selected','selected'); }
       sel.appendChild(opt);
+      sel.style.width = "65px";
     }
     txt.replaceWith(sel);
   }
