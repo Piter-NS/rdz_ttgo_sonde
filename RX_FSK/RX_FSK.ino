@@ -11,7 +11,7 @@
 #include <ESPmDNS.h>
 #include <MicroNMEA.h>
 #include <Ticker.h>
-11
+
 #include <SX1278FSK.h>
 #include <Sonde.h>
 #include <Display.h>
@@ -23,6 +23,11 @@
 #include "mqtt.h"
 #include "esp_heap_caps.h"
 //#define ESP_MEM_DEBUG 1
+
+#define DEVICE_GPS_LOG
+char buffer[85];
+MicroNMEA nmea(buffer, sizeof(buffer));
+
 int e;
 
 enum MainState { ST_DECODER, ST_SPECTRUM, ST_WIFISCAN, ST_UPDATE, ST_TOUCHCALIB };
@@ -264,8 +269,8 @@ const char *createQRGForm() {
     //String s = sondeTypeSelect(i >= sonde.nSonde ? 2 : sonde.sondeList[i].type);
     String site = sonde.sondeList[i].launchsite;
     sprintf(ptr + strlen(ptr), "<tr><td>%d</td><td><input name=\"A%d\" type=\"checkbox\" %s/></td>"
-            "<td><input name=\"F%d\" type=\"text\" value=\"%3.3f\" style='width: 60px;></td>"
-            "<td><input name=\"S%d\" type=\"text\" value=\"%s\" style='width: 120px;></td>"
+            "<td><input name=\"F%d\" type=\"text\" value=\"%3.3f\" style='width: 60px;'></td>"
+            "<td><input name=\"S%d\" type=\"text\" value=\"%s\" style='width: 120px;'></td>"
             //"<td><select name=\"T%d\">%s</select></td>",
             "<td><input class='stype' name='T%d' value='%c'>",
             i + 1,
@@ -436,20 +441,31 @@ void addSondeStatus(char *ptr, int i)
   struct tm ts;
   SondeInfo *s = &sonde.sondeList[i];
   strcat(ptr, "<table>");
-  sprintf(ptr + strlen(ptr), "<tr><td id=\"sfreq\">%3.3f MHz, Type: %s</td><tr><td>ID: %s", s->freq, sondeTypeLongStr[s->type],
+  sprintf(ptr + strlen(ptr), "<tr><td id=\"sfreq\">%s| %3.3f MHz | Type=%s", s->launchsite, s->freq, sondeTypeLongStr[s->type]);
+  if (s->type == STYPE_RS41) {  
+    sprintf(ptr + strlen(ptr), "| RSSI=-%d.%cdBm", sonde.si()->rssi/2, (sonde.si()->rssi&1)?'5':'0');
+  }
+  sprintf(ptr + strlen(ptr), "</td></tr><tr><td>ID: %s",
           s->validID ? s->id : "<?""?>");
   if (s->validID && (TYPE_IS_DFM(s->type) || TYPE_IS_METEO(s->type)) ) {
     sprintf(ptr + strlen(ptr), " (ser: %s)", s->ser);
   }
-  sprintf(ptr + strlen(ptr), "</td></tr><tr><td>QTH: %.6f,%.6f h=%.0fm</td></tr>\n", s->lat, s->lon, s->alt);
+  sprintf(ptr + strlen(ptr), "</td></tr><tr><td>QTH: %.6f, %.6f | h=%.0fm | heading=%.0f&deg;</td></tr><tr><td>Speed: hor=%.0fkm/h | vert=%.1fm/s</td></tr>\n", 
+	  s->lat, s->lon, s->alt, s->dir, (s->hs / 1000 * 3600), s->vs);
   const time_t t = s->time;
   ts = *gmtime(&t);
   sprintf(ptr + strlen(ptr), "<tr><td>Frame# %d, Sats=%d, %04d-%02d-%02d %02d:%02d:%02d</td></tr>",
           s->frame, s->sats, ts.tm_year + 1900, ts.tm_mon + 1, ts.tm_mday, ts.tm_hour, ts.tm_min, ts.tm_sec + s->sec);
   if (s->type == STYPE_RS41) {
-    sprintf(ptr + strlen(ptr), "<tr><td>Burst-KT=%d Launch-KT=%d Countdown=%d (vor %ds)</td></tr>\n",
+    sprintf(ptr + strlen(ptr), "<tr><td>Burst-KT=%d | Launch-KT=%d | Countdown=%d (vor %ds)</td></tr>\n",
             s->burstKT, s->launchKT, s->countKT, ((uint16_t)s->frame - s->crefKT));
   }
+  #ifdef DEVICE_GPS_LOG
+  if (nmea.isValid())
+  {
+    sprintf(ptr + strlen(ptr), "<tr><td>GPS: %.6f, %.6f | Alt=%dm | heading=%ld&deg; | Sats=%d  | hdop=%d</td></tr>\n", float(nmea.getLatitude()) / 1000000, float(nmea.getLongitude()) / 1000000, gpsPos.alt, nmea.getCourse() / 1000, nmea.getNumSatellites(), nmea.getHDOP());
+  }
+  #endif
   sprintf(ptr + strlen(ptr), "<tr><td><a target=\"_empty\" href=\"geo:%.6f,%.6f\">GEO-App</a> - ", s->lat, s->lon);
   sprintf(ptr + strlen(ptr), "<a target=\"_empty\" href=\"https://wetterson.de/karte/?%s\">wetterson.de</a> - ", s->id);
   sprintf(ptr + strlen(ptr), "<a target=\"_empty\" href=\"https://radiosondy.info/sonde_archive.php?sondenumber=%s\">radiosondy.info</a> - ", s->id);
@@ -1154,9 +1170,6 @@ void initTouch() {
     Serial.printf("Initializing touch 2 on pin %d\n", sonde.config.button2_pin & 0x7f);
   }
 }
-
-char buffer[85];
-MicroNMEA nmea(buffer, sizeof(buffer));
 
 
 
