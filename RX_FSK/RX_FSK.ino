@@ -204,6 +204,9 @@ void setupChannelList() {
     else if (space[1] == '2') {
       type = STYPE_M20;
     }
+    else if (space[1] == '3') {
+      type = STYPE_MP3H;
+    }
     else continue;
     int active = space[3] == '+' ? 1 : 0;
     if (space[4] == ' ') {
@@ -448,7 +451,7 @@ void addSondeStatus(char *ptr, int i)
   }
   sprintf(ptr + strlen(ptr), "</td></tr><tr><td>ID: %s",
           s->validID ? s->id : "<?""?>");
-  if (s->validID && (TYPE_IS_DFM(s->type) || TYPE_IS_METEO(s->type)) ) {
+  if (s->validID && (TYPE_IS_DFM(s->type) || TYPE_IS_METEO(s->type) || s->type==STYPE_MP3H) ) {
     sprintf(ptr + strlen(ptr), " (ser: %s)", s->ser);
   }
   sprintf(ptr + strlen(ptr), "</td></tr><tr><td>QTH: %.6f, %.6f | h=%.0fm | heading=%.0f&deg;</td></tr><tr><td>Speed: hor=%.0fkm/h | vert=%.1fm/s</td></tr>\n", 
@@ -541,6 +544,8 @@ struct st_configitems config_list[] = {
   {"dfm.rxbw", "DFM RX bandwidth", 0, &sonde.config.dfm.rxbw},
   {"m10m20.agcbw", "M10/M20 AGC bandwidth", 0, &sonde.config.m10m20.agcbw},
   {"m10m20.rxbw", "M10/M20 RX bandwidth", 0, &sonde.config.m10m20.rxbw},
+  {"mp3h.agcbw", "MP3H AGC bandwidth", 0, &sonde.config.mp3h.agcbw},
+  {"mp3h.rxbw", "MP3H RX bandwidth", 0, &sonde.config.mp3h.rxbw},
   {"ephftp", "FTP for eph (RS92)", 39, &sonde.config.ephftp},
   {"", "Data feed configuration", -5, NULL},
   /* APRS settings */
