@@ -59,15 +59,25 @@ h2.external-links {
     justify-content: center;
     gap: 20px;
 }
-
 .link-buttons .button {
-    background-color: #04AA6D;
-    color: white;
-    padding: 15px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 18px;
-    transition: background-color 0.3s ease;
+  background-color: #ccc;
+  border: black;
+  border-width: 1px;
+  color: black;
+  padding: 15px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  font-size: 18px;
+  margin-top: 0.3em;
+  margin-left: 0.4em;
+  margin-right: 0.4em;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.button:hover {
+  background-color: #04AA6D;
+  color: white;
 }
 
 
@@ -147,7 +157,7 @@ td#caption {
 }
 
 td#sfreq {
-	background-color: #ccc;
+	background-color: #b9b9b9;
 }
 
 .content {
