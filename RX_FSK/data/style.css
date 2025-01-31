@@ -478,8 +478,12 @@ input[name="main"], input[name="dev2"] {
   a:visited {
     color: #a94bff;
   }
-  .topnav, td#sfreq {
+  .topnav {
     background-color: grey;
+  }
+  td#sfreq {
+    background-color: #b9b9b9;
+    color: black;
   }
   .topnav a:visited {
     color: white;
@@ -507,7 +511,7 @@ input[name="main"], input[name="dev2"] {
   }
 }
 
-a:hover {
+a:hover, .stat a:link:hover {
   color: #00a1ff;
 }
 
