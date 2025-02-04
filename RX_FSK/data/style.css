@@ -38,7 +38,7 @@ body, html {
     cursor: pointer;
 }
 #refresh-button:hover {
-    color: #007BFF;
+    color: #00A1FF;
 }
 
 h2.external-links {
@@ -63,7 +63,9 @@ h2.external-links {
     font-size: 18px;
     transition: background-color 0.3s ease;
 }
-
+.button:hover {
+  background-color: #005636;
+}
 
 .active, .cfgheader:hover {
   background-color: #ccc;
@@ -76,7 +78,12 @@ h2.external-links {
 }
 
 th.cfg {
-  padding:5pt
+  padding:5pt;
+  cursor: pointer;
+}
+th.cfg:hover {
+  background-color: #04aa6d;
+  color: white;
 }
 table.stat {
   margin:0px 0px 5px 0px;
@@ -136,7 +143,7 @@ td#caption {
 }
 
 td#sfreq {
-	background-color: #ccc;
+	background-color: #b9b9b9;
 }
 
 .content {
@@ -170,9 +177,11 @@ h1{
 }
 :disabled.save {
   opacity: 0.5;
+  cursor: default;
+  animation: none;
 }
 .save {
-  background-color: #CC1111; /* 0F33C6; */
+  background-color: #540E0E;
   border: white;
   border-width: 1;
   color: white;
@@ -181,7 +190,8 @@ h1{
   text-decoration: none;
   display: block;
   font-size: 14px;
-  margin: 0
+  margin: 0;
+  cursor: pointer;
 }
 
 .ttgoinfo {
@@ -191,19 +201,30 @@ h1{
   font-size: 14px;
   margin: 0
 }
+input[name="main"], input[name="dev2"] {
+  min-width: 200px;
+  margin-top: 0px;
+  font-size: 1.6em;
+}
 .ctlbtn {
   background-color: #ccc;
   border: black;
   border-width: 1;
   color: black;
-  padding: 4px 30px;
+  padding: 12px 10px;
   text-align: center;
   text-decoration: none;
   display: block;
-  font-size: 4vh;
+  font-size: 3.2vh;
   margin-top: 0.3em;
-  margin-left: 0.3em;
-  margin-right: 0.3em;
+  margin-left: 0.4em;
+  margin-right: 0.4em;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.ctlbtn:hover {
+  background-color: #04AA6D;
+  color: white;
 }
 .update {
   margin: 0;
@@ -416,15 +437,13 @@ h1{
 @media (prefers-color-scheme: dark) {
   body {
     background-color: #333;
+    color: #a9a9a9;
   }
   h1{
     color: #3378f6;
   } 
   h2{
     color: white;
-  }
-  .system-info p {
-	  color: #bdbdbd;
   }
   .status-table th {
 	  color: black;
@@ -435,14 +454,21 @@ h1{
     border-collapse: collapse;
     background-color: #333;
   }
+  td#sfreq {
+    background-color: #b9b9b9;
+    color: black;
+  }  
   input, select, .tci, .warning {
     color: white;
     background-color: #333;
   }
-  a:link, a:visited {
-    color: #D3D3D3;
+  a:link {
+    color: #2568ff;
   }
-  .topnav, td#sfreq {
+  a:visited {
+    color: #a94bff;
+  }
+  .topnav {
     background-color: grey;
   }
   .topnav a:visited {
@@ -463,4 +489,34 @@ h1{
     color: white !important;
     background: grey !important;
   }
+  .save {
+    background-color: #CC1111;
+  }
+  .footer {
+	  background-color: #222222;
+  }
+}
+
+a:hover, .stat a:link:hover {
+  color: #00a1ff;
+}
+
+.topnav a:link, .topnav a:visited {
+  color: white;
+}
+
+
+@keyframes glowing {
+  0% {
+    background-color: #540E0E;
+  }
+  50% {
+    background-color: #DD0000;
+  }
+  100% {
+    background-color: #540E0E;
+  }
+}
+.save {
+  animation: glowing 1300ms infinite;
 }
