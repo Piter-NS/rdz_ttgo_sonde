@@ -4,6 +4,12 @@ body, html {
 	font-family: Arial;
 }
 
+.update-info {
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    flex-grow: 1;
+    overflow-y: auto;
+}
 .system-info {
     padding: 20px;
     font-family: Arial, sans-serif;
