@@ -175,8 +175,11 @@ html {
   text-align: left;
 }
 h1{
-  color: #0F3376;
+  color: #204aa9;
   font-size: 24px
+}
+a:visited {
+    color: #505091;
 }
 
 .button2 {
