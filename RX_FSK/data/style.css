@@ -457,7 +457,7 @@ input[name="main"], input[name="dev2"] {
   }
   .status-table th {
     color: black;
-    background-color: #d3d3d3;
+    background-color: #eee;
   }
   table, th, td, .save {
     color: white;
