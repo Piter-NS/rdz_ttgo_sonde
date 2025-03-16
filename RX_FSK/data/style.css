@@ -401,12 +401,6 @@ input[name="main"], input[name="dev2"] {
   font-size: 17px;
 }
 
-/* Change the color of links on hover */
-.topnav a:hover {
-  background-color: #ddd;
-  color: black;
-}
-
 /* Add an active class to highlight the current page */
 .topnav a.active {
   background-color: #04AA6D;
@@ -510,6 +504,12 @@ a:hover, .stat a:link:hover {
 
 .topnav a:link, .topnav a:visited {
   color: white;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
 }
 
 .save {
