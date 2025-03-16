@@ -447,10 +447,10 @@ input[name="main"], input[name="dev2"] {
 @media (prefers-color-scheme: dark) {
   body {
     background-color: #333;
-    color: white;
+    color: #a9a9a9;
   }
   h1{
-    color: #4cb5ff;
+    color: #1389dd;
   } 
   h2{
     color: white;
@@ -470,10 +470,10 @@ input[name="main"], input[name="dev2"] {
     background-color: #333;
   }
   a:link {
-    color: #238eff;
+    color: #f0f0f0;
   }
   a:visited {
-    color: #4c6f81;
+    color: #cacaca;
   }
   .topnav {
     background-color: grey;
